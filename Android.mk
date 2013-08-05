@@ -26,7 +26,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src) $(call all-renderscript-fil
 LOCAL_PACKAGE_NAME := Trebuchet
 LOCAL_CERTIFICATE := shared
 
-LOCAL_OVERRIDES_PACKAGES := Home Launcher2
+LOCAL_OVERRIDES_PACKAGES := Home
+#LOCAL_OVERRIDES_PACKAGES := Home Launcher2
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
