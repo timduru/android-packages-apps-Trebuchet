@@ -150,7 +150,7 @@ public class Launcher extends Activity
     private static final int REQUEST_PICK_SHORTCUT = 7;
     private static final int REQUEST_PICK_APPWIDGET = 9;
     private static final int REQUEST_PICK_WALLPAPER = 10;
-
+    
     private static final int REQUEST_BIND_APPWIDGET = 11;
     static final int REQUEST_PICK_ICON = 13;
 
@@ -341,6 +341,7 @@ public class Launcher extends Activity
     private Rect mRectForFolderAnimation = new Rect();
 
     private BubbleTextView mWaitingForResume;
+    private boolean mWallpaperVisible;
 
     private HideFromAccessibilityHelper mHideFromAccessibilityHelper
         = new HideFromAccessibilityHelper();
@@ -909,7 +910,8 @@ public class Launcher extends Activity
         // (framework issue). On resuming, we ensure that any widgets are inflated for the current
         // orientation.
         getWorkspace().reinflateWidgetsIfNecessary();
-
+        getWorkspace().checkWallpaper();
+        
         // Process any items that were added while Launcher was away.
         InstallShortcutReceiver.disableAndFlushInstallQueue(this);
 
@@ -1712,7 +1714,10 @@ public class Launcher extends Activity
                 mUserPresent = true;
                 updateRunning();
             }
-        }
+            else if (Intent.ACTION_SET_WALLPAPER.equals(action)) {
+                mWorkspace.checkWallpaper();
+            }
+        } 
     };
 
     @Override
@@ -1723,6 +1728,7 @@ public class Launcher extends Activity
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_SET_WALLPAPER);
         registerReceiver(mReceiver, filter);
         FirstFrameAnimatorHelper.initializeDrawListener(getWindow().getDecorView());
         mAttached = true;
@@ -2969,19 +2975,26 @@ public class Launcher extends Activity
         view.setPivotY(view.getHeight() / 2.0f);
     }
 
+
+    void setWallpaperVisibility(boolean visible) {
+        mWallpaperVisible = visible;
+        updateWallpaperVisibility(visible);
+    }
+
     private void setWorkspaceBackground(boolean workspace) {
         mLauncherView.setBackground(workspace ?
                 mWorkspaceBackgroundDrawable : null);
     }
 
     void updateWallpaperVisibility(boolean visible) {
-        int wpflags = visible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER : 0;
+        int wpflags = visible && mWallpaperVisible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER : 0;
         int curflags = getWindow().getAttributes().flags
                 & WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER;
         if (wpflags != curflags) {
             getWindow().setFlags(wpflags, WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
         }
-        setWorkspaceBackground(visible);
+        if(visible)
+        	setWorkspaceBackground(visible);
     }
 
     private void dispatchOnLauncherTransitionPrepare(View v, boolean animated, boolean toWorkspace) {

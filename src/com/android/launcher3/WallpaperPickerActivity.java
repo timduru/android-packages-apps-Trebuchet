@@ -84,6 +84,7 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
     private static final String TEMP_WALLPAPER_TILES = "TEMP_WALLPAPER_TILES";
 
     private static final int MENU_WALLPAPER_SCROLL = 0;
+    private static final int MENU_WALLPAPER_INTERNAL = 1;
 
 
     private View mSelectedThumb;
@@ -507,8 +508,8 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, MENU_WALLPAPER_SCROLL, 0,
-                R.string.wallpaper_scroll).setCheckable(true);
+        menu.add(0, MENU_WALLPAPER_SCROLL, 0, R.string.wallpaper_scroll).setCheckable(true);
+        menu.add(0, MENU_WALLPAPER_INTERNAL, 0, R.string.wallpaper_internal).setCheckable(true);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -520,6 +521,12 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
         wallpaperScroll.setChecked(SettingsProvider.getBoolean(this,
                 SettingsProvider.SETTINGS_UI_HOMESCREEN_SCROLLING_WALLPAPER_SCROLL,
                 R.bool.preferences_interface_homescreen_scrolling_wallpaper_scroll_default));
+
+        MenuItem wallpaperInternal = menu.findItem(MENU_WALLPAPER_INTERNAL);
+
+        wallpaperInternal.setChecked(SettingsProvider.getBoolean(this,
+                SettingsProvider.SETTINGS_UI_HOMESCREEN_WALLPAPER_INTERNAL,
+                R.bool.preferences_interface_homescreen_wallpaper_internal_default));
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -533,6 +540,12 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
                         .putBoolean(SettingsProvider.SETTINGS_UI_HOMESCREEN_SCROLLING_WALLPAPER_SCROLL, !item.isChecked())
                         .commit();
                 return true;
+            case MENU_WALLPAPER_INTERNAL:
+                SettingsProvider.get(this).edit()
+                        .putBoolean(SettingsProvider.SETTINGS_UI_HOMESCREEN_WALLPAPER_INTERNAL, !item.isChecked())
+                        .commit();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -41,6 +41,7 @@
 
 
     <string name="wallpaper_scroll">Scroll wallpaper</string>
+    <string name="wallpaper_internal">Render Internally</string>
 
     <!-- Settings -->
     <string name="preferences_title">Settings</string>
