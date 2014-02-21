@@ -40,7 +40,7 @@ LOCAL_PRIVILEGED_MODULE := true
 
 LOCAL_AAPT_FLAGS := --rename-manifest-package com.cyanogenmod.trebuchet
 
-LOCAL_OVERRIDES_PACKAGES := Launcher3
+LOCAL_OVERRIDES_PACKAGES := Home Launcher2 Launcher3
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
