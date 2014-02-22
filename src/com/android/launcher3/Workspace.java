@@ -498,7 +498,7 @@ public class Workspace extends SmoothPagedView
 
 
     protected void checkWallpaper() {
-        if (mWallpaperInternal && getChildCount() > 1) {
+        if (mWallpaperInternal) {
             if (mWallpaperBitmap != null) {
                 mWallpaperBitmap = null;
             }
@@ -516,7 +516,7 @@ public class Workspace extends SmoothPagedView
     }
 
     public boolean isRenderingWallpaper() {
-        return mWallpaperInternal && getChildCount() > 1 && mWallpaperBitmap != null;
+        return mWallpaperInternal && mWallpaperBitmap != null;
     }
     
     @Override
