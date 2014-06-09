@@ -96,14 +96,14 @@ public class OverviewSettingsPanel {
         });
         wallpaperButton.setOnTouchListener(mLauncher.getHapticFeedbackTouchListener());
 
-        View themesButton = mLauncher.findViewById(R.id.themes_button);
-        themesButton.setOnClickListener(new OnClickListener() {
+        View settingsButton = mLauncher.findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                mLauncher.startThemeSettings();
+                    ((SlidingUpPanelLayout) mOverviewPanel).expandPane();
             }
         });
-        themesButton.setOnTouchListener(mLauncher.getHapticFeedbackTouchListener());
+        settingsButton.setOnTouchListener(mLauncher.getHapticFeedbackTouchListener());
 
         View defaultScreenButton = mLauncher.findViewById(R.id.default_screen_button);
         defaultScreenButton.setOnClickListener(new OnClickListener() {
@@ -136,7 +136,7 @@ public class OverviewSettingsPanel {
         View widgetButton = mOverviewPanel.findViewById(R.id.widget_button);
         View wallpaperButton = mOverviewPanel
                 .findViewById(R.id.wallpaper_button);
-        View themesButton = mOverviewPanel.findViewById(R.id.themes_button);
+        View settingsButton = mOverviewPanel.findViewById(R.id.settings_button);
         View defaultHomePanel = mOverviewPanel.findViewById(R.id.default_screen_button);
 
         boolean isAllAppsVisible = mLauncher.isAllAppsVisible();
