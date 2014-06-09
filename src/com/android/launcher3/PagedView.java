@@ -255,6 +255,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private int DELETE_SLIDE_IN_SIDE_PAGE_DURATION = 250;
     private int DRAG_TO_DELETE_FADE_OUT_DURATION = 350;
 
+    protected boolean mEnforceRealBounds = false;
     // Drop to delete
     private View mDeleteDropTarget;
 
@@ -635,7 +636,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     @Override
     public void scrollTo(int x, int y) {
         // In free scroll mode, we clamp the scrollX
-        if (mFreeScroll) {
+        if (mFreeScroll || mEnforceRealBounds) {
             x = Math.min(x, mFreeScrollMaxScrollX);
             x = Math.max(x, mFreeScrollMinScrollX);
         }
@@ -1711,10 +1712,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         return OVERSCROLL_DAMP_FACTOR * f;
     }
 
-    protected void enableFreeScroll() {
-        setEnableFreeScroll(true, -1);
-    }
-
     protected void disableFreeScroll(int snapPage) {
         setEnableFreeScroll(false, snapPage);
     }
@@ -2597,7 +2594,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             mPostReorderingPreZoomInRunnable = new Runnable() {
                 public void run() {
                     onCompleteRunnable.run();
-                    enableFreeScroll();
                 };
             };
 
@@ -3109,10 +3105,10 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                     v.setAlpha(alpha);
                 }
 
-                // If the view has 0 alpha, we set it to be invisible so as to prevent
+                // If the view has 0 alpha, we move it off screen so as to prevent
                 // it from accepting touches
                 if (alpha == 0) {
-                    v.setVisibility(INVISIBLE);
+                    v.setTranslationX(v.getMeasuredWidth() * -10f);
                 } else if (v.getVisibility() != VISIBLE) {
                     v.setVisibility(VISIBLE);
                 }
@@ -3154,8 +3150,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                         v.setVisibility(VISIBLE);
                     }
                 } else {
-                    v.setTranslationX(0f);
-                    v.setVisibility(INVISIBLE);
+                    v.setTranslationX(v.getMeasuredWidth() * -10f);
                 }
             }
         }

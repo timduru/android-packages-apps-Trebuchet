@@ -31,6 +31,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
 import com.android.launcher3.settings.SettingsProvider;
 
 import java.util.ArrayList;
@@ -375,6 +377,11 @@ class DeviceProfile {
     }
 
     public void layout(Launcher launcher) {
+        // Update search bar for live settings
+        searchBarVisible = SettingsProvider.getBoolean(launcher, SettingsProvider.SETTINGS_UI_HOMESCREEN_SEARCH,
+                R.bool.preferences_interface_homescreen_search_default);
+        searchBarSpaceHeightPx = searchBarHeightPx + (searchBarVisible ? 2 * edgeMarginPx : 0);
+
         FrameLayout.LayoutParams lp;
         Resources res = launcher.getResources();
         boolean hasVerticalBarLayout = isVerticalBarLayout();
@@ -401,6 +408,14 @@ class DeviceProfile {
                     2 * edgeMarginPx, 0);
         }
         searchBar.setLayoutParams(lp);
+
+        // Layout the drop target icons
+        LinearLayout dropTargetBar = (LinearLayout) launcher.getSearchBar().getDropTargetBar();
+        if (hasVerticalBarLayout) {
+            dropTargetBar.setOrientation(LinearLayout.VERTICAL);
+        } else {
+            dropTargetBar.setOrientation(LinearLayout.HORIZONTAL);
+        }
 
         // Layout the search bar
         View qsbBar = launcher.getQsbBar();
@@ -483,7 +498,7 @@ class DeviceProfile {
                 lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
                 lp.width = LayoutParams.WRAP_CONTENT;
                 lp.height = LayoutParams.WRAP_CONTENT;
-                lp.bottomMargin = hotseatBarHeightPx;
+                lp.bottomMargin = Math.max(hotseatBarHeightPx, lp.bottomMargin);
                 pageIndicator.setLayoutParams(lp);
             }
         }
